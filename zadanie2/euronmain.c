@@ -5,8 +5,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#define N_TESTS 3
-#define N 2
+#define N_TESTS 4
 
 uint64_t get_value(uint64_t n) {
     assert(n < N);
@@ -31,12 +30,16 @@ typedef struct Test {
 
 const Test tests[N_TESTS][N] = {
         {
-                {0, "4n+1n-+4n+1n-+SCS",                        5},
-                {1, "4n+1n-+4n+1n-+SCS",                        4}
+                {0, "91S", 0},
+                {1, "00S", 9},
         },
         {
-                {0, "4n+1n-+S",                                 5},
-                {1, "4n+1n-+S",                                 4}
+                {0, "4n+1n-+4n+1n-+SCS", 5},
+                {1, "4n+1n-+4n+1n-+SCS", 4}
+        },
+        {
+                {0, "4n+1n-+S", 5},
+                {1, "4n+1n-+S", 4}
         },
         {
                 {0, "01234n+P56789E-+D+*G*1n-+S2ED+E1-+75+-BC", 112},
