@@ -11,11 +11,10 @@ P_ASCII    equ 0x50
 G_ASCII    equ 0x47
 S_ASCII    equ 0x53
 
-acces TIMES N dq 0xffffffff      ; TODO change for generating growing sequence
+access TIMES N dq 0xffffffff      ; TODO change for generating growing sequence
 
 section .bss
 to_exchange resq N
-spin_locks resb N
 
 section .text
 euron:
@@ -27,7 +26,7 @@ euron:
     mov r12, rdi    ;number of euron
     mov r13, rsi    ;pointer to string
 
-    lea rcx, [rel acces]
+    lea rcx, [rel access]
     lea rcx, [rcx + 8*r12]
     mov [rcx], r12              ; change acces to my own field
 
@@ -109,49 +108,34 @@ _n:
     push r12
     jmp read_loop
 
-busy_wait:
-    xchg [rdi],al
-    test al, al
-    jnz busy_wait
-    cmp [rcx], r12
-    je wait_end
-    xchg [rdi],al
-    jne busy_wait
-wait_end:
-    ret
-
 _S:
     cmp rcx, S_ASCII
     jne _n
 
-    lea rcx, [rel acces]                 ;TODO check if this is the best way
+    lea rcx, [rel access]                 ;TODO check if this is the best way
     lea rcx, [rcx + 8*r12]
     lea rdx, [rel to_exchange]
     lea rdx, [rdx + 8*r12]
-    lea rdi, [rel spin_locks]
-    lea rdi, [rdi + r12]
 
-    mov al, 1
-    call busy_wait
+busy_wait:
+    cmp [rcx], r12
+    jne busy_wait
 
     pop rsi                 ; number euron to echange
     pop qword [rdx]         ; value to exchange
     mov [rcx], rsi
-    mov [rdi], al
 
-    lea rcx, [rel acces]
+    lea rcx, [rel access]
     lea rcx, [rcx + 8*rsi]
     lea rdx, [rel to_exchange]
     lea rdx, [rdx + 8*rsi]
-    lea rdi, [rel spin_locks]
-    lea rdi, [rdi + rsi]
 
-    mov al, 1
-    call busy_wait
+busy_wait_2:
+    cmp [rcx], r12
+    jne busy_wait_2
 
     push qword [rdx]
     mov [rcx], rsi
-    mov [rdi],al
     jmp read_loop
 exit:
     pop rax
