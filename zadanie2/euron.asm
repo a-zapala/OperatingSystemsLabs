@@ -3,12 +3,7 @@ extern get_value, put_value
 
 section .data
 
-access:             ; declaring an array of growing seqence integer
-%assign i 0         ;
-%rep N
-    dq i
-%assign i i+1
-%endrep
+access TIMES N dq 0xfeffffff      ; TODO change for generating growing sequence
 
 section .bss
 to_exchange resq N
@@ -23,6 +18,10 @@ euron:
 
     mov r12, rdi    ;number of euron
     mov r13, rsi    ;pointer to string
+
+    lea rcx, [rel access]
+    lea rcx, [rcx + 8*r12]
+    mov [rcx], r12              ; change acces to my own field
 
     dec r13
     ;to find instruction, i use binary search through ASCII numbers
