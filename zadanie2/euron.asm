@@ -3,7 +3,7 @@ extern get_value, put_value
 
 section .data
 
-access TIMES N dq 0xfeffffff      ; TODO change for generating growing sequence
+access TIMES N dq 0xffffffff
 
 section .bss
 to_exchange resq N
